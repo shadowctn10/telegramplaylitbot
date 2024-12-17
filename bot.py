@@ -5,7 +5,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, Con
 from pydub import AudioSegment
 
 # --- متغیرهای مهم ---
-TOKEN = "7830811506:AAHyJzPYq1hXQqQiu9Uaob1h_KcZXIS8nWk"  # توکن ربات تلگرام
+TOKEN = "7830811506:AAHyRQAEQkgntjl66aWb2bG9pdvqLoaqLc0"  # توکن ربات تلگرام
 GENIUS_API_TOKEN = "1k3ljpOFJhSQs52wnj8MaAnfFqVfLGOzBXUhBakw7aD1SAvQsVqih4RK8ds8CLNx"  # توکن API سایت Genius
 DEMO_DURATION_MS = 60000  # مدت زمان دمو (1 دقیقه)
 
