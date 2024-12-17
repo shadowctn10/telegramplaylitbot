@@ -10,8 +10,13 @@ GENIUS_API_TOKEN = "1k3ljpOFJhSQs52wnj8MaAnfFqVfLGOzBXUhBakw7aD1SAvQsVqih4RK8ds8
 DEMO_DURATION_MS = 60000  # مدت زمان دمو (1 دقیقه)
 
 # تنظیم مسیر FFmpeg و ffprobe
-AudioSegment.converter = "/usr/bin/ffmpeg"
-AudioSegment.ffprobe = "/usr/bin/ffprobe"
+from pydub import AudioSegment
+import imageio_ffmpeg as ffmpeg
+
+# تنظیم خودکار مسیر FFmpeg
+AudioSegment.converter = ffmpeg.get_ffmpeg_exe()
+AudioSegment.ffprobe = ffmpeg.get_ffmpeg_exe()
+
 # --- تابع برای دریافت لیریک ---
 def get_lyrics(song_name: str) -> str:
     headers = {"Authorization": f"Bearer {GENIUS_API_TOKEN}"}
