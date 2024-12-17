@@ -10,9 +10,8 @@ GENIUS_API_TOKEN = "1k3ljpOFJhSQs52wnj8MaAnfFqVfLGOzBXUhBakw7aD1SAvQsVqih4RK8ds8
 DEMO_DURATION_MS = 60000  # مدت زمان دمو (1 دقیقه)
 
 # تنظیم مسیر FFmpeg و ffprobe
-AudioSegment.converter = r"C:\ffmpeg-7.0.2-essentials_build\bin\ffmpeg.exe"
-AudioSegment.ffprobe = r"C:\ffmpeg-7.0.2-essentials_build\bin\ffprobe.exe"
-
+AudioSegment.converter = "/usr/bin/ffmpeg"
+AudioSegment.ffprobe = "/usr/bin/ffprobe"
 # --- تابع برای دریافت لیریک ---
 def get_lyrics(song_name: str) -> str:
     headers = {"Authorization": f"Bearer {GENIUS_API_TOKEN}"}
