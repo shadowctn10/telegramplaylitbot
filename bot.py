@@ -8,7 +8,7 @@ from telegram.ext import (
 from pydub import AudioSegment
 
 # --- متغیرهای مهم ---
-TOKEN = "7830811506:AAHyRQAEQkgntjl66aWb2bG9pdvqLoaqLc0"  # توکن ربات تلگرام
+TOKEN = "7830811506:AAFl55qQrJvtMtd0wINrP6zs25LUzcICME4"  # توکن ربات تلگرام
 GENIUS_API_TOKEN = "1k3ljpOFJhSQs52wnj8MaAnfFqVfLGOzBXUhBakw7aD1SAvQsVqih4RK8ds8CLNx"  # توکن API سایت Genius
 OWNER_ID = 5668163693  # شناسه تلگرام شما (جایگزین کنید)
 DEMO_DURATION_MS = 60000  # مدت زمان دمو (1 دقیقه)
