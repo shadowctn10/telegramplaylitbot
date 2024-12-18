@@ -121,7 +121,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- تابع اصلی برای اجرای ربات ---
 def main():
-    app = ApplicationBuilder().token(TOKEN).drop_pending_updates(True).build()
+    app = ApplicationBuilder().token(TOKEN).build()
 
     # هندلرها
     app.add_handler(CommandHandler("start", start))
@@ -130,7 +130,7 @@ def main():
     app.add_handler(ChatMemberHandler(check_admin_and_report, ChatMemberHandler.MY_CHAT_MEMBER))
 
     print("ربات در حال اجراست...")
-    app.run_polling()
+    app.run_polling(drop_pending_updates=True)  # مدیریت پیام‌های قدیمی
 
 if __name__ == "__main__":
     main()
