@@ -1,21 +1,45 @@
 import os
 import requests
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, CallbackQueryHandler, filters
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ChatMemberUpdated
+from telegram.ext import (
+    ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes,
+    CallbackQueryHandler, ChatMemberHandler, filters
+)
 from pydub import AudioSegment
 
 # --- متغیرهای مهم ---
 TOKEN = "7830811506:AAHyRQAEQkgntjl66aWb2bG9pdvqLoaqLc0"  # توکن ربات تلگرام
 GENIUS_API_TOKEN = "1k3ljpOFJhSQs52wnj8MaAnfFqVfLGOzBXUhBakw7aD1SAvQsVqih4RK8ds8CLNx"  # توکن API سایت Genius
+OWNER_ID = 5668163693  # شناسه تلگرام شما (جایگزین کنید)
 DEMO_DURATION_MS = 60000  # مدت زمان دمو (1 دقیقه)
 
 # تنظیم مسیر FFmpeg و ffprobe
-from pydub import AudioSegment
-import imageio_ffmpeg as ffmpeg
+AudioSegment.converter = "/usr/bin/ffmpeg"  # مسیر FFmpeg برای Render
+AudioSegment.ffprobe = "/usr/bin/ffprobe"
 
-# تنظیم خودکار مسیر FFmpeg
-AudioSegment.converter = ffmpeg.get_ffmpeg_exe()
-AudioSegment.ffprobe = ffmpeg.get_ffmpeg_exe()
+# --- تابع برای بررسی کاربری که ربات را اضافه کرده و گزارش دادن ---
+async def check_admin_and_report(update: ChatMemberUpdated, context: ContextTypes.DEFAULT_TYPE):
+    chat = update.effective_chat
+    inviter = update.invite_link.creator_user_id if update.invite_link else None
+
+    if update.new_chat_member.status == "member":  # زمانی که ربات به گروه اضافه شد
+        # گزارش اضافه شدن ربات
+        group_info = f"👥 ربات به گروه اضافه شد:\n" \
+                     f"📌 نام گروه: {chat.title}\n" \
+                     f"🆔 شناسه گروه: {chat.id}\n"
+        if inviter:
+            group_info += f"👤 اضافه‌کننده: {inviter}"
+
+        # ارسال گزارش به مالک
+        await context.bot.send_message(chat_id=OWNER_ID, text=group_info)
+
+        # بررسی مالک گروه
+        if inviter != OWNER_ID:
+            await context.bot.send_message(
+                chat_id=chat.id,
+                text="⛔ فقط مالک ربات اجازه اضافه کردن این ربات به گروه را دارد. ربات در حال خروج است..."
+            )
+            await context.bot.leave_chat(chat.id)
 
 # --- تابع برای دریافت لیریک ---
 def get_lyrics(song_name: str) -> str:
@@ -93,10 +117,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- تابع اصلی برای اجرای ربات ---
 def main():
-    app = ApplicationBuilder().token(TOKEN).build()
+    app = ApplicationBuilder().token(TOKEN).drop_pending_updates(True).build()
+
+    # هندلرها
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.AUDIO, process_audio))
     app.add_handler(CallbackQueryHandler(lyrics_button, pattern="^lyrics:"))
+    app.add_handler(ChatMemberHandler(check_admin_and_report, ChatMemberHandler.MY_CHAT_MEMBER))
 
     print("ربات در حال اجراست...")
     app.run_polling()
