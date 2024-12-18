@@ -24,20 +24,25 @@ AudioSegment.ffprobe = ffmpeg.get_ffmpeg_exe()
 # --- تابع برای بررسی کاربری که ربات را اضافه کرده و گزارش دادن ---
 async def check_admin_and_report(update: ChatMemberUpdated, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
-    inviter = update.invite_link.creator_user_id if update.invite_link else None
 
+    # بررسی وضعیت ربات در گروه
     if update.new_chat_member.status == "member":  # زمانی که ربات به گروه اضافه شد
-        # گزارش اضافه شدن ربات
-        group_info = f"👥 ربات به گروه اضافه شد:\n" \
-                     f"📌 نام گروه: {chat.title}\n" \
-                     f"🆔 شناسه گروه: {chat.id}\n"
+        # بررسی دعوت‌کننده (فقط در صورت وجود لینک دعوت)
+        inviter = update.invite_link.creator_user_id if update.invite_link else None
+
+        group_info = (
+            f"👥 ربات به گروه اضافه شد:\n"
+            f"📌 نام گروه: {chat.title}\n"
+            f"🆔 شناسه گروه: {chat.id}\n"
+        )
+
         if inviter:
             group_info += f"👤 اضافه‌کننده: {inviter}"
 
-        # ارسال گزارش به مالک
+        # ارسال گزارش به شما (مالک ربات)
         await context.bot.send_message(chat_id=OWNER_ID, text=group_info)
 
-        # بررسی مالک گروه
+        # بررسی اینکه آیا اضافه‌کننده شما هستید یا خیر
         if inviter != OWNER_ID:
             await context.bot.send_message(
                 chat_id=chat.id,
