@@ -14,8 +14,12 @@ OWNER_ID = 5668163693  # شناسه تلگرام شما (جایگزین کنید
 DEMO_DURATION_MS = 60000  # مدت زمان دمو (1 دقیقه)
 
 # تنظیم مسیر FFmpeg و ffprobe
-AudioSegment.converter = "/usr/bin/ffmpeg"  # مسیر FFmpeg برای Render
-AudioSegment.ffprobe = "/usr/bin/ffprobe"
+from pydub import AudioSegment
+import imageio_ffmpeg as ffmpeg
+
+# تنظیم خودکار مسیر FFmpeg
+AudioSegment.converter = ffmpeg.get_ffmpeg_exe()
+AudioSegment.ffprobe = ffmpeg.get_ffmpeg_exe()
 
 # --- تابع برای بررسی کاربری که ربات را اضافه کرده و گزارش دادن ---
 async def check_admin_and_report(update: ChatMemberUpdated, context: ContextTypes.DEFAULT_TYPE):
